@@ -1,2 +1,2 @@
 # vetsoft
-Sistema de gestión de vacunación para veterinaria. Poryecto demostración MPII
+Sistema de gestión de vacunación para veterinaria. Proyecto demostración MPII
