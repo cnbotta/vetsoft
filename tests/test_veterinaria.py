@@ -54,3 +54,28 @@ def test_no_guarda_una_lista_aparte_de_animales(firulais):
 
 def test_una_veterinaria_sin_clientes_no_tiene_animales():
     assert Veterinaria("Patitas").animales() == []
+
+
+# --- animales al día (select) ---
+def test_los_animales_al_dia_son_los_que_no_deben_vacunas(firulais, michi):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    for vacuna in firulais.esquema_de_vacunacion():
+        firulais.aplicar_vacuna(vacuna)
+    ana.registrar_animal(firulais)
+    ana.registrar_animal(michi)
+    vet.registrar_cliente(ana)
+    assert vet.animales_al_dia() == [firulais]
+
+
+def test_una_veterinaria_sin_clientes_no_tiene_animales_al_dia():
+    assert Veterinaria("Patitas").animales_al_dia() == []
+
+
+def test_un_animal_con_una_sola_vacuna_pendiente_no_esta_al_dia(firulais):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    firulais.aplicar_vacuna(firulais.esquema_de_vacunacion()[0])
+    ana.registrar_animal(firulais)
+    vet.registrar_cliente(ana)
+    assert vet.animales_al_dia() == []
