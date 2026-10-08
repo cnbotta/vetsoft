@@ -5,6 +5,7 @@ class Veterinaria:
       nombre()                   -> str
       registrar_cliente(cliente) -> None  (error si ya hay un cliente con ese DNI)
       clientes()                 -> list[Cliente]
+      animales()                 -> list[Animal]
     """
 
     def __init__(self, nombre):
@@ -21,3 +22,12 @@ class Veterinaria:
 
     def clientes(self):
         return list(self._clientes)  # copia: no exponemos la lista interna
+
+    def animales(self):
+        """Los animales de todos los clientes.
+
+        No guardamos una lista aparte: se arma cada vez recorriendo los clientes.
+        Así un animal registrado despues de dar de alta al cliente aparece igual,
+        y no hay dos lugares que puedan quedar desincronizados.
+        """
+        return [animal for cliente in self._clientes for animal in cliente.animales()]
