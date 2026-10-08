@@ -9,6 +9,8 @@ class Veterinaria:
       animales_al_dia()          -> list[Animal]
       buscar_animal(nombre)      -> Animal | None
       animales_por_especie()     -> dict[str, int]
+      animales_con_vacunas_pendientes() -> list[Animal]
+      agenda_de_llamados()       -> list[Animal]  (ordenada por urgencia)
     """
 
     def __init__(self, nombre):
@@ -68,3 +70,28 @@ class Veterinaria:
             especie = animal.especie()
             conteo[especie] = conteo.get(especie, 0) + 1
         return conteo
+
+    def animales_con_vacunas_pendientes(self):
+        """Los animales que deben al menos una vacuna.
+
+        Es un **reject**: el complemento de `animales_al_dia`, descartando los
+        que cumplen la condición en lugar de quedárselos.
+        """
+        return [animal for animal in self.animales() if not animal.esta_al_dia()]
+
+    def agenda_de_llamados(self):
+        """Los animales que deben vacunas, del más urgente al menos urgente.
+
+        El criterio de orden está escrito una sola vez, en `_urgencia`: si mañana
+        hay que ordenar también por antigüedad, se cambia ahí y nada más.
+        """
+        return sorted(self.animales_con_vacunas_pendientes(), key=self._urgencia)
+
+    @staticmethod
+    def _urgencia(animal):
+        """Más vacunas pendientes primero; a igualdad, por nombre alfabético.
+
+        El signo menos invierte solo la cantidad, así el nombre sigue ordenando
+        de la A a la Z.
+        """
+        return (-len(animal.vacunas_pendientes()), animal.nombre())

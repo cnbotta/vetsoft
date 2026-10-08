@@ -139,3 +139,45 @@ def test_el_conteo_no_inventa_especies_que_no_atiende(firulais):
     ana.registrar_animal(firulais)
     vet.registrar_cliente(ana)
     assert vet.animales_por_especie() == {"perro": 1}
+
+
+# --- agenda ordenada por urgencia ---
+def test_la_agenda_ordena_por_cantidad_de_vacunas_pendientes(firulais, michi):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    # Firulais debe 1 (ya tiene una), Michi debe las 2
+    firulais.aplicar_vacuna(firulais.esquema_de_vacunacion()[0])
+    ana.registrar_animal(firulais)
+    ana.registrar_animal(michi)
+    vet.registrar_cliente(ana)
+    assert vet.agenda_de_llamados() == [michi, firulais]
+
+
+def test_a_igualdad_de_pendientes_ordena_por_nombre():
+    from datetime import date
+
+    from src.animal import crear_animal
+
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    zulma = crear_animal("Zulma", "gato", date(2020, 1, 1))
+    bobby = crear_animal("Bobby", "perro", date(2020, 1, 1))
+    ana.registrar_animal(zulma)
+    ana.registrar_animal(bobby)
+    vet.registrar_cliente(ana)
+    assert vet.agenda_de_llamados() == [bobby, zulma]
+
+
+def test_los_animales_al_dia_no_entran_en_la_agenda(firulais, michi):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    for vacuna in firulais.esquema_de_vacunacion():
+        firulais.aplicar_vacuna(vacuna)
+    ana.registrar_animal(firulais)
+    ana.registrar_animal(michi)
+    vet.registrar_cliente(ana)
+    assert vet.agenda_de_llamados() == [michi]
+
+
+def test_una_veterinaria_sin_clientes_tiene_la_agenda_vacia():
+    assert Veterinaria("Patitas").agenda_de_llamados() == []
