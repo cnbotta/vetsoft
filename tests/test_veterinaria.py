@@ -112,3 +112,30 @@ def test_buscar_devuelve_el_primero_cuando_hay_nombres_repetidos():
     ana.registrar_animal(segundo)
     vet.registrar_cliente(ana)
     assert vet.buscar_animal("Negro") is primero
+
+
+# --- conteo por especie (diccionario de ocurrencias) ---
+def test_conteo_por_especie(firulais, michi):
+    from datetime import date
+
+    from src.animal import crear_animal
+
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    ana.registrar_animal(firulais)
+    ana.registrar_animal(michi)
+    ana.registrar_animal(crear_animal("Negro", "perro", date(2019, 1, 1)))
+    vet.registrar_cliente(ana)
+    assert vet.animales_por_especie() == {"perro": 2, "gato": 1}
+
+
+def test_una_veterinaria_sin_animales_no_cuenta_especies():
+    assert Veterinaria("Patitas").animales_por_especie() == {}
+
+
+def test_el_conteo_no_inventa_especies_que_no_atiende(firulais):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    ana.registrar_animal(firulais)
+    vet.registrar_cliente(ana)
+    assert vet.animales_por_especie() == {"perro": 1}
