@@ -8,6 +8,7 @@ class Veterinaria:
       animales()                 -> list[Animal]
       animales_al_dia()          -> list[Animal]
       buscar_animal(nombre)      -> Animal | None
+      animales_por_especie()     -> dict[str, int]
     """
 
     def __init__(self, nombre):
@@ -54,3 +55,16 @@ class Veterinaria:
             (animal for animal in self.animales() if animal.nombre() == nombre),
             None,
         )
+
+    def animales_por_especie(self):
+        """Cuántos animales hay de cada especie: especie -> cantidad.
+
+        El diccionario se arma con las especies que **aparecen**, no con una lista
+        fija de especies conocidas. Por eso, cuando mañana la clínica empiece a
+        atender conejos, este método los cuenta sin tocar una línea.
+        """
+        conteo = {}
+        for animal in self.animales():
+            especie = animal.especie()
+            conteo[especie] = conteo.get(especie, 0) + 1
+        return conteo
