@@ -7,6 +7,7 @@ class Veterinaria:
       clientes()                 -> list[Cliente]
       animales()                 -> list[Animal]
       animales_al_dia()          -> list[Animal]
+      buscar_animal(nombre)      -> Animal | None
     """
 
     def __init__(self, nombre):
@@ -41,3 +42,15 @@ class Veterinaria:
         veterinaria pregunta, no decide.
         """
         return [animal for animal in self.animales() if animal.esta_al_dia()]
+
+    def buscar_animal(self, nombre):
+        """El primer animal con ese nombre, o None si no hay ninguno.
+
+        Es un **detect**: corta en cuanto encuentra uno y no sigue recorriendo.
+        Devolver None en lugar de romper deja que el menú decida qué mostrar:
+        no encontrar nada es un resultado posible, no un error.
+        """
+        return next(
+            (animal for animal in self.animales() if animal.nombre() == nombre),
+            None,
+        )
