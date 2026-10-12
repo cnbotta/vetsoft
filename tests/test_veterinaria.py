@@ -181,3 +181,21 @@ def test_los_animales_al_dia_no_entran_en_la_agenda(firulais, michi):
 
 def test_una_veterinaria_sin_clientes_tiene_la_agenda_vacia():
     assert Veterinaria("Patitas").agenda_de_llamados() == []
+
+
+# --- nombres de los animales (collect) ---
+def test_los_nombres_de_los_animales(firulais, michi):
+    vet = Veterinaria("San Roque")
+    dueño = Cliente("Ana", 30111222)
+    dueño.registrar_animal(firulais)
+    dueño.registrar_animal(michi)
+    vet.registrar_cliente(dueño)
+
+    assert vet.nombres_de_los_animales() == ["Firulais", "Michi"]
+
+
+def test_los_nombres_sin_animales_es_una_lista_vacia():
+    vet = Veterinaria("San Roque")
+    vet.registrar_cliente(Cliente("Ana", 30111222))
+
+    assert vet.nombres_de_los_animales() == []
