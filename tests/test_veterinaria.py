@@ -79,3 +79,36 @@ def test_un_animal_con_una_sola_vacuna_pendiente_no_esta_al_dia(firulais):
     ana.registrar_animal(firulais)
     vet.registrar_cliente(ana)
     assert vet.animales_al_dia() == []
+
+
+# --- buscar por nombre (detect) ---
+def test_buscar_un_animal_por_nombre(firulais, michi):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    ana.registrar_animal(firulais)
+    ana.registrar_animal(michi)
+    vet.registrar_cliente(ana)
+    assert vet.buscar_animal("Michi") is michi
+
+
+def test_buscar_un_animal_que_no_existe_devuelve_none(firulais):
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    ana.registrar_animal(firulais)
+    vet.registrar_cliente(ana)
+    assert vet.buscar_animal("Pelusa") is None
+
+
+def test_buscar_devuelve_el_primero_cuando_hay_nombres_repetidos():
+    from datetime import date
+
+    from src.animal import crear_animal
+
+    vet = Veterinaria("Patitas")
+    ana = Cliente("Ana Díaz", 30111222)
+    primero = crear_animal("Negro", "perro", date(2019, 1, 1))
+    segundo = crear_animal("Negro", "gato", date(2021, 1, 1))
+    ana.registrar_animal(primero)
+    ana.registrar_animal(segundo)
+    vet.registrar_cliente(ana)
+    assert vet.buscar_animal("Negro") is primero
