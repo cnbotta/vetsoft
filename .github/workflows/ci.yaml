@@ -15,12 +15,12 @@ concurrency:
 jobs:
   pruebas:
     name: Pruebas y estilo
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04   # fijamos la versión: ubuntu-latest pasa a Ubuntu 26 el 19/10/2026
     steps:
       - uses: actions/checkout@v7
 
       - name: Instalar uv
-        uses: astral-sh/setup-uv@v8.1.0
+        uses: astral-sh/setup-uv@v10.3.0   # setup-uv no publica tag flotante de major
         with:
           enable-cache: true
 
