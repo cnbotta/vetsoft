@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Instalar uv
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.0   # setup-uv no publica tag flotante de major
         with:
           enable-cache: true
 
