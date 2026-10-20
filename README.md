@@ -25,3 +25,16 @@ docker run --rm -it vetsoft    # abre el menú
 El `-it` es necesario porque el menú lee del teclado. El `--rm` borra el contenedor
 al salir. Si cambiás el código, hay que volver a hacer `docker build`: la imagen es
 una foto del momento en que se construyó.
+
+### Atajos
+
+Para no escribir los comandos a mano hay un `Makefile`:
+
+```bash
+make               # lista las tareas disponibles
+make construir     # docker build -t vetsoft .
+make correr        # docker run --rm -it vetsoft
+make imagenes      # docker images
+make contenedores  # docker ps -a
+make limpiar       # docker system prune
+```
