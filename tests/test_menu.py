@@ -1,5 +1,3 @@
-from datetime import date
-
 from src.cliente import Cliente
 from src.menu import Menu, datos_de_ejemplo
 from src.veterinaria import Veterinaria
@@ -88,8 +86,19 @@ def test_registrar_un_animal_a_nombre_de_un_cliente():
 def test_aplicar_una_vacuna_desde_el_menu():
     vet = Veterinaria("San Roque")
     correr(
-        ["2", "Ana", "30111222", "3", "30111222", "Firulais", "perro",
-         "4", "Firulais", "Quíntuple", "0"],
+        [
+            "2",
+            "Ana",
+            "30111222",
+            "3",
+            "30111222",
+            "Firulais",
+            "perro",
+            "4",
+            "Firulais",
+            "Quíntuple",
+            "0",
+        ],
         vet,
     )
 
@@ -156,8 +165,19 @@ def test_un_dni_que_no_es_numero_avisa_y_vuelve_al_menu():
 def test_una_vacuna_que_no_corresponde_muestra_el_error():
     vet = Veterinaria("San Roque")
     salida = correr(
-        ["2", "Ana", "30111222", "3", "30111222", "Michi", "gato",
-         "4", "Michi", "Quíntuple", "0"],
+        [
+            "2",
+            "Ana",
+            "30111222",
+            "3",
+            "30111222",
+            "Michi",
+            "gato",
+            "4",
+            "Michi",
+            "Quíntuple",
+            "0",
+        ],
         vet,
     )
 
