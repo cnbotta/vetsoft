@@ -7,6 +7,7 @@ class Veterinaria:
       clientes()                 -> list[Cliente]
       animales()                 -> list[Animal]
       animales_al_dia()          -> list[Animal]
+      nombres_de_los_animales()  -> list[str]
       buscar_animal(nombre)      -> Animal | None
       animales_por_especie()     -> dict[str, int]
       animales_con_vacunas_pendientes() -> list[Animal]
@@ -45,6 +46,15 @@ class Veterinaria:
         veterinaria pregunta, no decide.
         """
         return [animal for animal in self.animales() if animal.esta_al_dia()]
+
+    def nombres_de_los_animales(self):
+        """Los nombres de todos los animales.
+
+        Es un **collect**: transforma cada elemento en otra cosa (el animal en su
+        nombre) y devuelve una colección del mismo tamaño. A diferencia del select,
+        no filtra nada: mapea.
+        """
+        return [animal.nombre() for animal in self.animales()]
 
     def buscar_animal(self, nombre):
         """El primer animal con ese nombre, o None si no hay ninguno.
