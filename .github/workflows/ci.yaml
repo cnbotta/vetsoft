@@ -32,3 +32,14 @@ jobs:
 
       - name: Pruebas
         run: uv run pytest -q
+
+  imagen:
+    name: Imagen Docker
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      # Las máquinas del CI ya traen Docker: no hace falta instalar nada.
+      # Solo comprueba que el Dockerfile funciona, no publica nada.
+      - name: Construir la imagen
+        run: docker build -t vetsoft .
