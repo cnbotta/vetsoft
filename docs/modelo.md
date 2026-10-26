@@ -10,6 +10,7 @@ entender el dominio y entregar un incremento.
 
 | Clase | ¿Se implementa? | Por qué está |
 |---|---|---|
+| `Menu` | Sí | Presentación. No es del dominio: traduce teclado a mensajes. |
 | `Veterinaria` | Sí | Agregado raíz. Donde viven los recorridos de colección. |
 | `Cliente` | Sí | Dueño de los animales. Asociación uno a muchos. |
 | `Animal` | Sí | Clase base. |
@@ -26,9 +27,16 @@ Tres decisiones del modelo:
 - `Veterinaria o-- Cliente`: **agregación**, porque un cliente existe aunque cierre la veterinaria.
 - `Animal *-- HistoriaClinica`: **composición**, porque la historia clínica no existe sin su animal.
 - `Animal <|-- Perro`: **herencia**, justificada porque cada especie tiene un esquema de vacunación distinto.
+- `Menu --> Veterinaria`: **dependencia en un solo sentido**. El menú conoce a la veterinaria, la veterinaria no sabe que existe el menú. Por eso el dominio se prueba sin pantalla y mañana se le puede poner una interfaz web sin tocar una línea del negocio.
 
 ```mermaid
 classDiagram
+    class Menu {
+        -veterinaria
+        -leer
+        -escribir
+        +correr()
+    }
     class Veterinaria {
         -nombre
         +registrarCliente(cliente)
@@ -91,6 +99,7 @@ classDiagram
         +confirmar()
         +cancelar()
     }
+    Menu "1" --> "1" Veterinaria : usa
     Veterinaria "1" o-- "*" Cliente : clientes
     Cliente "1" o-- "*" Animal : animales
     Animal <|-- Perro
@@ -106,26 +115,33 @@ classDiagram
 ## Diagrama de secuencia: vacunar a un animal
 
 Incluye **autodelegación** (`esquemaDeVacunacion()` sale y vuelve al mismo objeto) y una
-**condición** con `alt`.
+**condición** con `alt`. El recepcionista no habla con el dominio: teclea en el menú, y el
+menú traduce eso en mensajes a los objetos.
 
 ```mermaid
 sequenceDiagram
     actor R as Recepcion
+    participant M as menu:Menu
     participant V as vet:Veterinaria
     participant C as ana:Cliente
     participant A as firulais:Perro
-    R->>V: buscarAnimal("Firulais")
+    R->>M: elige "Aplicar una vacuna"
+    M->>V: buscarAnimal("Firulais")
     V->>C: animales()
     C-->>V: [firulais, michi]
-    V-->>R: firulais
-    R->>A: vacunasPendientes()
+    V-->>M: firulais
+    M->>A: vacunasPendientes()
     A->>A: esquemaDeVacunacion()
-    A-->>R: ["Antirrabica"]
-    R->>A: aplicarVacuna("Antirrabica")
+    A-->>M: ["Antirrabica"]
+    M-->>R: muestra las pendientes
+    R->>M: teclea "Antirrabica"
+    M->>A: aplicarVacuna("Antirrabica")
     alt la vacuna no corresponde a la especie
-        A-->>R: error
+        A-->>M: error
+        M-->>R: avisa y vuelve al menu
     else corresponde y no la tenia
         A->>A: registra la vacuna
-        A-->>R: ok
+        A-->>M: ok
+        M-->>R: confirma
     end
 ```
